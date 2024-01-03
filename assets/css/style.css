@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica', sans-serif;
+  }
+  
+  .navbar {
+    background-color: #222;
+  }
+  
+  .jumbotron {
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+   
+
+  }
+  
+  .jumbotron img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    max-height: 90%;
+    
+    max-width: 80%; /* Set a maximum width for the text container */
+    text-align: center; /* Center-align the text within the container */
+  }
+  
+  .text-container h1 {
+    font-size: 4.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .text-container p {
+    font-size: 1.8rem;
+    font-style: italic;
+  }
+
+  #movie-form {
+    margin-top: 20px;
+  }
+  
+  #movie-input {
+    /* Add any specific styles for the movie input if needed */
+  }
+  
+  #find-movie {
+    /* Add any specific styles for the find movie button if needed */
+  }
+  
+  #movie-view {
+    /* Add any specific styles for the movie view section if needed */
+  }
+  #youtube-player {
+    width: 100%; /* Set the desired width, it can be in pixels or percentage */
+    height: 360px; /* Set the desired height */
+  }
