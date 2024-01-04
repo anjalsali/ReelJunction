@@ -38,11 +38,12 @@
 
   <div class="container mt-5">
     <h1 class="mb-4">Movie Search</h1>
-    <div class="form-group">
+    <div class="input-group">
       <input type="text" class="form-control" id="movieSearch" placeholder="Enter movie title">
+      <button type="button" class="btn btn-primary" onclick="searchMovie()">Search</button>
     </div>
-    <button type="button" class="btn btn-primary" onclick="searchMovie()">Search</button>
   </div>
+
 
   <!-- Bootstrap Modal for No Results -->
   <div class="modal fade" id="noResultsModal" tabindex="-1" role="dialog" aria-labelledby="noResultsModalLabel" aria-hidden="true">
@@ -61,8 +62,6 @@
       </div>
     </div>
   </div>
-
-
 
   <div id="movieDetails" class="container mt-5"></div>
 
