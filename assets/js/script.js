@@ -41,7 +41,7 @@ function displayMovieDetails(movie) {
         <div class="col-md-8">
            <h2>${movie.title}</h2>
            <p><strong>Release Date:</strong> ${movie.release_date}</p>
-           <p><strong>Language:</strong> ${movie.original_language}</p>
+           <p><strong>Language:</strong> ${getLanguageName(movie.original_language)}</p>
            <p><strong>Popularity:</strong> ${movie.popularity}</p>
            <p><strong>Overview:</strong> ${movie.overview}</p>
         </div>
@@ -50,6 +50,17 @@ function displayMovieDetails(movie) {
   `;
 
    $("#movieDetails").html(movieDetailsHTML);
+}
+
+function getLanguageName(languageCode) {
+   // Add more language mappings as needed
+   const languageMap = {
+      en: "English",
+      es: "Spanish",
+      fr: "French",
+   };
+
+   return languageMap[languageCode] || languageCode;
 }
 
 function getYouTubeTrailers(movieTitle) {
