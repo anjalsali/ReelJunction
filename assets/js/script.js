@@ -11,35 +11,45 @@ function searchMovie() {
    $.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movieTitle}`, function (data) {
       console.log(data);
       if (data.results && data.results.length > 0) {
-         const movie = data.results[0];
-         displayMovieDetails(movie);
-         // Make YouTube API request for movie trailers
-         getYouTubeTrailers(movieTitle);
+         const bestMovie = findBestMovie(data.results);
+         if (bestMovie) {
+            displayMovieDetails(bestMovie);
+            // Make YouTube API request for movie trailers
+            getYouTubeTrailers(bestMovie.title);
+         } else {
+            $("#movieDetails").html("<p>No valid results found.</p>");
+         }
       } else {
          $("#movieDetails").html("<p>No results found.</p>");
       }
    });
 }
 
+function findBestMovie(results) {
+   // Find the first movie with a valid poster path
+   return results.find((movie) => movie.poster_path);
+}
+
 function displayMovieDetails(movie) {
    const posterURL = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750.png?text=No+Poster+Available";
 
    const movieDetailsHTML = `
-     <div class="row">
-        <div class="col-md-4">
-           <img src="${posterURL}" alt="${movie.title}" class="img-fluid">
-        </div>
-        <div class="col-md-8">
-           <h2>${movie.title}</h2>
-           <p><strong>Release Date:</strong> ${movie.release_date}</p>
-           <p><strong>Overview:</strong> ${movie.overview}</p>
-        </div>
-     </div>
-     <div id="youtubeTrailers" class="mt-4"></div>
-  `;
+      <div class="row">
+         <div class="col-md-4">
+            <img src="${posterURL}" alt="${movie.title}" class="img-fluid">
+         </div>
+         <div class="col-md-8">
+            <h2>${movie.title}</h2>
+            <p><strong>Release Date:</strong> ${movie.release_date}</p>
+            <p><strong>Overview:</strong> ${movie.overview}</p>
+         </div>
+      </div>
+      <div id="youtubeTrailers" class="mt-4"></div>
+   `;
 
    $("#movieDetails").html(movieDetailsHTML);
 }
+
 function getYouTubeTrailers(movieTitle) {
    // Make YouTube API request for top 3 video clips
    $.get(`https://www.googleapis.com/youtube/v3/search?key=${youtubeApiKey}&q=${movieTitle} trailer&maxResults=3&part=snippet&type=video`, function (data) {
