@@ -34,18 +34,20 @@ function displayMovieDetails(movie) {
    const posterURL = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750.png?text=No+Poster+Available";
 
    const movieDetailsHTML = `
-      <div class="row">
-         <div class="col-md-4">
-            <img src="${posterURL}" alt="${movie.title}" class="img-fluid">
-         </div>
-         <div class="col-md-8">
-            <h2>${movie.title}</h2>
-            <p><strong>Release Date:</strong> ${movie.release_date}</p>
-            <p><strong>Overview:</strong> ${movie.overview}</p>
-         </div>
-      </div>
-      <div id="youtubeTrailers" class="mt-4"></div>
-   `;
+     <div class="row">
+        <div class="col-md-4">
+           <img src="${posterURL}" alt="${movie.title}" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+           <h2>${movie.title}</h2>
+           <p><strong>Release Date:</strong> ${movie.release_date}</p>
+           <p><strong>Language:</strong> ${movie.original_language}</p>
+           <p><strong>Popularity:</strong> ${movie.popularity}</p>
+           <p><strong>Overview:</strong> ${movie.overview}</p>
+        </div>
+     </div>
+     <div id="youtubeTrailers" class="mt-4"></div>
+  `;
 
    $("#movieDetails").html(movieDetailsHTML);
 }
