@@ -136,7 +136,7 @@ function saveFavoriteMovies(favorites) {
 function displayFavoriteMovies() {
    // Display favorite movies as cards
    const favorites = getFavoriteMovies();
-   displayMovieResults(favorites, "#favoriteMovies", "Favourites");
+   displayMovieResults(favorites, "#favoriteMovies", "");
 }
 
 // ... (rest of your existing code)
