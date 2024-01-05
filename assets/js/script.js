@@ -80,11 +80,12 @@ function displayMovieDetails(movie) {
          <div class="col-md-4">
             <img src="${posterURL}" alt="${movie.title}" class="img-fluid">
          </div>
-         <div class="col-md-8">
+         <div class="col-md-8 text-left">
             <h2>${movie.title}</h2>
             <p><strong>Release Date:</strong> ${movie.release_date}</p>
             <p><strong>Language:</strong> ${getLanguageName(movie.original_language)}</p>
-            <p><strong>Popularity:</strong> ${movie.popularity}</p>
+            <p><strong>Rating:</strong> ${movie.vote_average}</p>
+            <p><strong>Duration:</strong> ${movie.runtime} Minutes </p>
             <p><strong>Overview:</strong> ${movie.overview}</p>
             <button class="btn btn-primary btn-sm add-favorite" data-movie="${encodeURIComponent(JSON.stringify(movie))}">Add to Favorites</button>
          </div>
@@ -112,13 +113,14 @@ function addFavoriteMovie(movie) {
    const isAlreadyFavorite = favorites.some((fav) => fav.id === movie.id);
    if (!isAlreadyFavorite) {
       // Add the movie to favorites
+      favAddModal();
       favorites.push(movie);
       // Save the updated favorites to localStorage
       saveFavoriteMovies(favorites);
       // Display the updated list of favorite movies
       displayFavoriteMovies();
    } else {
-      alert("Movie is already in favorites.");
+      favWarnModal();
    }
 }
 
@@ -136,7 +138,7 @@ function saveFavoriteMovies(favorites) {
 function displayFavoriteMovies() {
    // Display favorite movies as cards
    const favorites = getFavoriteMovies();
-   displayMovieResults(favorites, "#favoriteMovies", "Favourites");
+   displayMovieResults(favorites, "#favoriteMovies", "");
 }
 
 // ... (rest of your existing code)
@@ -144,6 +146,16 @@ function displayFavoriteMovies() {
 function showNoResultsModal() {
    // Display Bootstrap modal for no results
    $("#noResultsModal").modal("show");
+}
+
+function favAddModal() {
+   // Display Bootstrap modal for no results
+   $("#favAddModal").modal("show");
+}
+
+function favWarnModal() {
+   // Display Bootstrap modal for no results
+   $("#favWarnModal").modal("show");
 }
 
 function getLanguageName(languageCode) {
