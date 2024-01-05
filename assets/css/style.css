@@ -42,6 +42,9 @@
 }
 
 /* Custom styling for Navigation bar */
+.logo {
+   height: 40px;
+}
 .custom-nav {
    position: fixed;
    top: 0;
