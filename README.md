@@ -4,7 +4,7 @@ Reel Junction is a web application that allows users to explore popular movies, 
 
 ## Screenshots
 
-![Home Page](https://example.com/screenshots/home.png)
+![Home Page](./assets/images/Screenshot%202024-01-05%20at%2015.14.08.png)
 
 
 ## Deployment
