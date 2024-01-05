@@ -9,7 +9,7 @@ Reel Junction is a web application that allows users to explore popular movies, 
 
 ## Deployment
 
-The live application is deployed and can be accessed [here](https://your-deployment-url.com).
+The live application is deployed and can be accessed [here](https://anjalsali.github.io/ReelJunction/).
 
 ## Features
 
