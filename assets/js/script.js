@@ -9,7 +9,7 @@ $(document).ready(function () {
 function getTopPopularMovies() {
    $.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`, function (data) {
       const topMovies = data.results.slice(0, 12);
-      displayMovieResults(topMovies, "#topMovies");
+      displayMovieResults(topMovies, "#movieDetails", "Popular Movies");
    });
 }
 
@@ -24,7 +24,7 @@ function searchMovie() {
       console.log(data);
       if (data.results && data.results.length > 0) {
          // Display the top five results as Bootstrap cards
-         displayMovieResults(data.results.slice(0, 8));
+         displayMovieResults(data.results.slice(0, 8), "#movieDetails", "Search Results");
       } else {
          showNoResultsModal();
       }
@@ -33,10 +33,10 @@ function searchMovie() {
 
 // ... (your existing code)
 
-function displayMovieResults(results, targetElement) {
+function displayMovieResults(results, targetElement, heading) {
    // Create Bootstrap cards in a responsive grid for the movie results
    const cardsHTML = results.map((movie) => createMovieCard(movie)).join("");
-   $(targetElement).html(`<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">${cardsHTML}</div>`);
+   $(targetElement).html(`<h2>${heading}</h2><div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">${cardsHTML}</div>`);
 
    // Attach click event to each card
    $(".movie-card").click(function () {
@@ -50,6 +50,7 @@ function createMovieCard(movie) {
    const posterURL = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750.png?text=No+Poster+Available";
 
    return `
+
      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
         <div class="card movie-card" data-movie-id="${movie.id}">
            <img src="${posterURL}" class="card-img-top" alt="${movie.title}">
