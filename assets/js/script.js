@@ -1,6 +1,18 @@
 const apiKey = "bd47bd61ffdc07b88868a059e48e9040";
 const youtubeApiKey = "AIzaSyAcyFaQuKnjyDgqIrS7KiSfweuz8aRZ1wI";
 
+// Display top 10 popular movies when the page loads
+$(document).ready(function () {
+   getTopPopularMovies();
+});
+
+function getTopPopularMovies() {
+   $.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`, function (data) {
+      const topMovies = data.results.slice(0, 12);
+      displayMovieResults(topMovies, "#topMovies");
+   });
+}
+
 function searchMovie() {
    const movieTitle = $("#movieSearch").val();
 
@@ -21,10 +33,10 @@ function searchMovie() {
 
 // ... (your existing code)
 
-function displayMovieResults(results) {
-   // Create Bootstrap cards in a responsive grid for the top 8 movie results
+function displayMovieResults(results, targetElement) {
+   // Create Bootstrap cards in a responsive grid for the movie results
    const cardsHTML = results.map((movie) => createMovieCard(movie)).join("");
-   $("#movieDetails").html(`<div class="row">${cardsHTML}</div>`);
+   $(targetElement).html(`<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">${cardsHTML}</div>`);
 
    // Attach click event to each card
    $(".movie-card").click(function () {
