@@ -88,3 +88,18 @@
 .nav-link:hover {
    color: #0dcaf0 !important;
 }
+
+footer ul.list-inline li {
+   margin-right: 15px; /* Add some space between list items */
+   display: inline-block;
+}
+
+footer ul.list-inline li a {
+   text-decoration: none; /* Remove underlines */
+   color: #fff; /* Set the default text color */
+   transition: color 0.3s; /* Add a smooth transition effect for color changes */
+}
+
+footer ul.list-inline li a:hover {
+   color: #0dcaf0; /* Change the text color on hover */
+}
