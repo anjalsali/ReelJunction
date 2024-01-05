@@ -1,7 +1,7 @@
 const apiKey = "bd47bd61ffdc07b88868a059e48e9040";
 const youtubeApiKey = "AIzaSyAcyFaQuKnjyDgqIrS7KiSfweuz8aRZ1wI";
 
-// Display top 10 popular movies and favorites when the page loads
+// Display top 12 popular movies and favorites when the page loads
 $(document).ready(function () {
    getTopPopularMovies();
    displayFavoriteMovies();
@@ -17,8 +17,6 @@ function getTopPopularMovies() {
 
 function searchMovie() {
    const movieTitle = $("#movieSearch").val();
-
-   // Clear previous results
 
    // Make TMDb API request for movie details
    $.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movieTitle}`, function (movieData) {
