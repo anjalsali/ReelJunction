@@ -11,24 +11,57 @@ function searchMovie() {
    $.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movieTitle}`, function (data) {
       console.log(data);
       if (data.results && data.results.length > 0) {
-         const bestMovie = findBestMovie(data.results);
-         if (bestMovie) {
-            displayMovieDetails(bestMovie);
-            // Make YouTube API request for movie trailers
-            getYouTubeTrailers(bestMovie.title);
-         } else {
-            showNoResultsModal();
-         }
+         // Display the top five results as Bootstrap cards
+         displayMovieResults(data.results.slice(0, 8));
       } else {
          showNoResultsModal();
       }
    });
 }
 
-function findBestMovie(results) {
-   // Find the first movie with a valid poster path
-   return results.find((movie) => movie.poster_path);
+// ... (your existing code)
+
+function displayMovieResults(results) {
+   // Create Bootstrap cards in a responsive grid for the top 8 movie results
+   const cardsHTML = results.map((movie) => createMovieCard(movie)).join("");
+   $("#movieDetails").html(`<div class="row">${cardsHTML}</div>`);
+
+   // Attach click event to each card
+   $(".movie-card").click(function () {
+      const movieId = $(this).data("movie-id");
+      // Retrieve detailed information and trailers for the selected movie
+      getMovieDetails(movieId);
+   });
 }
+
+function createMovieCard(movie) {
+   const posterURL = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750.png?text=No+Poster+Available";
+
+   return `
+     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card movie-card" data-movie-id="${movie.id}">
+           <img src="${posterURL}" class="card-img-top" alt="${movie.title}">
+           <div class="card-body">
+              <h5 class="card-title">${movie.title}</h5>
+           </div>
+        </div>
+     </div>
+  `;
+}
+
+// ... (your existing functions)
+
+function getMovieDetails(movieId) {
+   // Make TMDb API request for detailed movie information
+   $.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`, function (movie) {
+      console.log(movie);
+      // Display detailed information and trailers for the selected movie
+      displayMovieDetails(movie);
+      getYouTubeTrailers(movie.title);
+   });
+}
+
+// ... (your existing functions)
 
 function displayMovieDetails(movie) {
    const posterURL = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750.png?text=No+Poster+Available";
@@ -81,4 +114,8 @@ function getYouTubeTrailers(movieTitle) {
          .join("");
       $("#youtubeTrailers").html(trailersHTML);
    });
+}
+
+function reloadPage() {
+   location.reload();
 }
