@@ -1,14 +1,16 @@
 const apiKey = "bd47bd61ffdc07b88868a059e48e9040";
 const youtubeApiKey = "AIzaSyAcyFaQuKnjyDgqIrS7KiSfweuz8aRZ1wI";
 
-// Display top 10 popular movies when the page loads
+// Display top 10 popular movies and favorites when the page loads
 $(document).ready(function () {
    getTopPopularMovies();
+   displayFavoriteMovies();
 });
 
 function getTopPopularMovies() {
    $.get(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=en-US&page=1`, function (data) {
       const topMovies = data.results.slice(0, 12);
+      console.log("Popular Movies", topMovies);
       displayMovieResults(topMovies, "#movieDetails", "Popular Movies");
    });
 }
@@ -17,30 +19,29 @@ function searchMovie() {
    const movieTitle = $("#movieSearch").val();
 
    // Clear previous results
-   $("#movieDetails").html("");
 
    // Make TMDb API request for movie details
-   $.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movieTitle}`, function (data) {
-      console.log(data);
-      if (data.results && data.results.length > 0) {
-         // Display the top five results as Bootstrap cards
-         displayMovieResults(data.results.slice(0, 8), "#movieDetails", "Search Results");
+   $.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${movieTitle}`, function (movieData) {
+      if (movieData.results && movieData.results.length > 0) {
+         const searchMovies = movieData.results.slice(0, 12);
+         console.log("search Movies", searchMovies);
+         displayMovieResults(searchMovies, "#movieDetails", "Search Results");
       } else {
          showNoResultsModal();
       }
    });
 }
 
-// ... (your existing code)
-
 function displayMovieResults(results, targetElement, heading) {
    // Create Bootstrap cards in a responsive grid for the movie results
    const cardsHTML = results.map((movie) => createMovieCard(movie)).join("");
-   $(targetElement).html(`<h2>${heading}</h2><div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">${cardsHTML}</div>`);
+   document.getElementById("headingName").innerHTML = heading;
+   $(targetElement).html(`<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">${cardsHTML}</div>`);
 
    // Attach click event to each card
    $(".movie-card").click(function () {
       const movieId = $(this).data("movie-id");
+      console.log("movie card Id", movieId);
       // Retrieve detailed information and trailers for the selected movie
       getMovieDetails(movieId);
    });
@@ -50,7 +51,6 @@ function createMovieCard(movie) {
    const posterURL = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750.png?text=No+Poster+Available";
 
    return `
-
      <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
         <div class="card movie-card" data-movie-id="${movie.id}">
            <img src="${posterURL}" class="card-img-top" alt="${movie.title}">
@@ -62,23 +62,19 @@ function createMovieCard(movie) {
   `;
 }
 
-// ... (your existing functions)
-
 function getMovieDetails(movieId) {
    // Make TMDb API request for detailed movie information
    $.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}`, function (movie) {
-      console.log(movie);
+      console.log("movie detail", movie);
       // Display detailed information and trailers for the selected movie
       displayMovieDetails(movie);
       getYouTubeTrailers(movie.title);
    });
 }
 
-// ... (your existing functions)
-
 function displayMovieDetails(movie) {
    const posterURL = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750.png?text=No+Poster+Available";
-
+   document.getElementById("headingName").innerHTML = "";
    const movieDetailsHTML = `
       <div class="row">
          <div class="col-md-4">
@@ -90,6 +86,7 @@ function displayMovieDetails(movie) {
             <p><strong>Language:</strong> ${getLanguageName(movie.original_language)}</p>
             <p><strong>Popularity:</strong> ${movie.popularity}</p>
             <p><strong>Overview:</strong> ${movie.overview}</p>
+            <button class="btn btn-primary btn-sm add-favorite" data-movie="${encodeURIComponent(JSON.stringify(movie))}">Add to Favorites</button>
          </div>
       </div>
       <div id="youtubeTrailers" class="mt-4"></div>
@@ -97,6 +94,52 @@ function displayMovieDetails(movie) {
 
    $("#movieDetails").html(movieDetailsHTML);
 }
+
+$(document).on("click", ".add-favorite", function () {
+   const movieDataString = $(this).data("movie");
+   const movieData = JSON.parse(decodeURIComponent(movieDataString));
+   console.log("Movie data of favourite movie", movieData);
+   addFavoriteMovie(movieData);
+});
+
+function addFavoriteMovie(movie) {
+   // Get the existing favorites from localStorage
+   console.log("This is favourite movie", movie);
+   const favorites = getFavoriteMovies();
+   console.log("movie Id", movie.id);
+
+   // Check if the movie is already in favorites
+   const isAlreadyFavorite = favorites.some((fav) => fav.id === movie.id);
+   if (!isAlreadyFavorite) {
+      // Add the movie to favorites
+      favorites.push(movie);
+      // Save the updated favorites to localStorage
+      saveFavoriteMovies(favorites);
+      // Display the updated list of favorite movies
+      displayFavoriteMovies();
+   } else {
+      alert("Movie is already in favorites.");
+   }
+}
+
+function getFavoriteMovies() {
+   // Retrieve favorites from localStorage
+   const favoritesJSON = localStorage.getItem("favorites");
+   return favoritesJSON ? JSON.parse(favoritesJSON) : [];
+}
+
+function saveFavoriteMovies(favorites) {
+   // Save favorites to localStorage
+   localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+
+function displayFavoriteMovies() {
+   // Display favorite movies as cards
+   const favorites = getFavoriteMovies();
+   displayMovieResults(favorites, "#favoriteMovies", "Favourites");
+}
+
+// ... (rest of your existing code)
 
 function showNoResultsModal() {
    // Display Bootstrap modal for no results
@@ -127,6 +170,14 @@ function getYouTubeTrailers(movieTitle) {
          .join("");
       $("#youtubeTrailers").html(trailersHTML);
    });
+}
+
+function clearFavorites() {
+   // Remove favorites from local storage
+   localStorage.removeItem("favorites");
+
+   // Optionally, update the displayed favorite movies
+   displayFavoriteMovies();
 }
 
 function reloadPage() {
